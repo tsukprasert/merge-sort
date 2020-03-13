@@ -1,0 +1,121 @@
+def merge2List(alist, lefthalf, righthalf, i, j, pos):
+    comparison = 0
+    while i < len(lefthalf) and j < len(righthalf):
+        if lefthalf[i] < righthalf[j]:
+            alist[pos] = righthalf[j]
+            j += 1
+        else:
+            alist[pos] = lefthalf[i]
+            i += 1
+        comparison += 1
+        pos += 1
+
+    while i < len(lefthalf):
+        alist[pos] = lefthalf[i]
+        i = i + 1
+        pos += 1
+    while j < len(righthalf):
+        alist[pos]=righthalf[j]
+        j = j+1
+        pos += 1
+
+    return comparison
+
+def mergeSort_3_way(alist):
+
+    comparison = 0
+    i = 0 # index for the left list
+    j = 0  #index for the middle list
+    k = 0 # index for the right list
+    pos = 0 # index for the main list
+
+
+    if len(alist) == 2:
+        lefthalf = alist[:1]
+        righthalf = alist[1:]
+        comparison = comparison + merge2List(alist,lefthalf,righthalf,i,j,pos)  # go through 2 ways merge sort instead
+
+    if len(alist)>2:
+        left = len(alist)//3
+        right = len(alist)*2 // 3
+        leftthird = alist[:left]
+        midthird = alist[left:right]
+        rightthird = alist[right:]
+
+        comparison = comparison + (mergeSort_3_way(leftthird))
+        comparison = comparison + (mergeSort_3_way(midthird))
+        comparison = comparison + (mergeSort_3_way(rightthird))
+
+        while i < len(leftthird) and j < len(midthird) and k < len(rightthird):  # comparison stage
+            if leftthird[i] > midthird[j]:
+                if leftthird[i] > rightthird[k]:
+                    alist[pos] = leftthird[i]
+                    i +=1
+                else:
+                    alist[pos] = rightthird[k]
+                    k += 1
+                pos += 1
+                comparison += 1
+            else:
+                if midthird[j] > rightthird[k]:
+                    alist[pos] = midthird[j]
+                    j += 1
+                else:
+                    alist[pos] = rightthird[k]
+                    k += 1
+                pos += 1
+                comparison += 1
+            comparison += 1
+        while i < len(leftthird) and j < len(midthird):
+            if leftthird[i] > midthird[j]:
+                alist[pos] = leftthird[i]
+                i += 1
+            else:
+                alist[pos] = midthird[j]
+                j += 1
+            pos += 1
+            comparison += 1
+
+        while j < len(midthird) and k < len(rightthird):
+            if midthird[j] > rightthird[k]:
+                alist[pos] = midthird[j]
+                j += 1
+                comparison += 1
+            else:
+                alist[pos] = rightthird[k]
+                k += 1
+                comparison += 1
+            pos += 1
+            #comparison += 1
+
+        while i < len(leftthird) and k < len(rightthird):
+            if leftthird[i] > rightthird[k]:
+                alist[pos] = leftthird[i]
+                i += 1
+            else:
+                alist[pos] = rightthird[k]
+                k += 1
+            comparison += 1
+            pos += 1
+
+        # check for the remaining values in the lists and add them to the main list
+        while i < len(leftthird):
+            alist[pos] = leftthird[i]
+            i += 1
+            pos += 1
+
+        while j < len(midthird):
+            alist[pos] = midthird[j]
+            j += 1
+            pos += 1
+        while k < len(rightthird):
+            alist[pos] = rightthird[k]
+            k += 1
+            pos += 1
+
+
+    return comparison
+
+arr = [5, 10, 9, 6, 8,3, 1, 4,2, 7]
+print(mergeSort_3_way(arr))
+print(arr)
